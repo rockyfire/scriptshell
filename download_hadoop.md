@@ -26,9 +26,12 @@
 # !/bin/bash
 for i in {1901..2017}  
 do  
-    cd /linuxtext  
-    wget -r -np -nH --cut-dirs=3 -R index.html ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-lite/$i/
-    cd isd-lite/$i              
+    cd /linuxtext/isd-lite  
+    if [ -d $i ]; then
+        continue
+    fi
+    wget -r -np -nH --cut-dirs=4 -R index.html ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-lite/$i/
+    cd $i              
     gzip -d *.gz
 done                                            
 ```
@@ -46,3 +49,18 @@ done
 ##### 运行
     
     ./download.sh
+
+---
+
+#### 循环执行的例行性工作调度
+
+##### 命令
+
+    crontab -e
+    
+    0 9 * 10 * /home/candy/Desktop/git/download.sh
+    
+##### 说明
+
+运行了俩天才下载了到1950年，而且1950年之前的文件比较小。懒惰的我使用crontab命令每天早上自动执行。
+
